@@ -1,4 +1,3 @@
-
 <?php
 function add_comment_rating_field() {
     // Enqueue the stylesheet and script files
@@ -684,3 +683,22 @@ function remove_required_fields_from_review_form( $fields ) {
 }
 add_filter( 'woocommerce_product_review_comment_form_args', 'remove_required_fields_from_review_form' ); */
 
+
+
+
+
+// this is for direct checkout of the free pdf product
+
+// Redirect to checkout for a specific product
+function redirect_to_checkout_for_specific_product() {
+    // Change the product ID below to the ID of the product you want to redirect to checkout
+    $product_id = 9931;
+    // Check if the product is in the cart
+    if (WC()->cart->get_cart_contents_count() == 1 && WC()->cart->get_cart_contents()[0]['product_id'] == $product_id) {
+      // Redirect to checkout page
+      wp_redirect(wc_get_checkout_url());
+      exit;
+    }
+  }
+  add_action('template_redirect', 'redirect_to_checkout_for_specific_product');
+  

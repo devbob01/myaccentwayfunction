@@ -209,16 +209,35 @@ add_filter( 'woocommerce_product_tabs', 'change_product_description_tab_for_sess
 
 
 
+//////////////////////////////////////////////////////
 
 
 
+// woocoomerce review display name
+add_filter('get_comment_author', 'comments_filter_uprise', 10, 1);
 
+function comments_filter_uprise( $author = '' ) {
+    $comment = get_comment( $comment_author_email );
 
-
-
-
-
-
+    if ( !empty($comment->comment_author_email) ) {
+        if (!empty($comment->comment_author_email)){
+            $user=get_user_by('email', $comment->comment_author_email);
+//          $author=substr($user->first_name,0,1).' '. $user->last_name.'';
+            $author = trim($comment->comment_author);
+            $last_name = (strpos($author, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $author);
+            $first_name = trim( preg_replace('#'.preg_quote($last_name,'#').'#', '', $author ) );
+            $author= $first_name;
+        } else {
+            $user = get_user_by( 'email', $comment->comment_author_email );
+            $author = $user->first_name;
+        }
+    } else {
+        $user=get_userdata($comment->user_id);
+        $author=substr($user->first_name,0,1).' '. $user->last_name.'';
+        $author = $comment->comment_author;
+    }
+    return $author;
+}
 
 
 //////////////////////////////////////////////////////
